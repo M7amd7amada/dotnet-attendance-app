@@ -100,9 +100,34 @@ public class DataGenerator
 
         if (!(appDbContext.Users.Any()))
         {
+            var operatingSystems = new List<string>()
+            {
+                "Windows 11",
+                "Windows 10",
+                "Windows 7",
+                "Windows 8.1",
+                "Ubuntu",
+            };
+
+            var browsers = new List<string>
+            {
+                "Chrome",
+                "Firefox",
+                "Edge"
+            };
+
+            var status = new List<string>
+            {
+                "Active",
+                "Inactive"
+            };
+
+            // RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
             var testUsers = new Faker<User>()
                 .RuleFor(u => u.FirstName, u => u.Name.FirstName())
                 .RuleFor(u => u.LastName, u => u.Name.LastName())
+                .RuleFor(u => u.LoginDate, u => u.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
+                .RuleFor(a => a.LogoutDate, f => f.Date.Between(DateTime.UtcNow, DateTime.UtcNow.AddHours(20)))
                 .RuleFor(u => u.Username, u => u.Internet.UserName())
                 .RuleFor(u => u.Password, u => u.Internet.Password());
             var users = testUsers.Generate(4);
@@ -119,8 +144,18 @@ public class DataGenerator
 
             foreach (User u in users)
             {
+                var random = new Random();
+                var operatingSystemsIndex = random.Next(operatingSystems.Count);
+                var statusIndex = random.Next(status.Count);
+                var browsersIndex = random.Next(browsers.Count);
+
+                u.OS = operatingSystems[operatingSystemsIndex];
+                u.Browser = browsers[browsersIndex];
+                u.LoginStatus = status[statusIndex];
+
                 u.PasswordHash = BCrypt.Net.BCrypt.HashPassword(u.Password);
                 u.Password = "**********";
+                if (u.Username == "admin") u.LoginStatus = "Active";
                 appDbContext.Users.Add(u);
             }
             appDbContext.SaveChanges();

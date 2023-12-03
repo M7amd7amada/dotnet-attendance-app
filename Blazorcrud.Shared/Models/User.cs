@@ -10,8 +10,10 @@ namespace Blazorcrud.Shared.Models
         public string Username { get; set; } = default!;
         public string Password { get; set; } = default!;
         public DateTime LoginDate { get; set; } = DateTime.UtcNow;
-        public DateTime LogoutDate { get; set; }
-        public string LoginStatus { get; set; } = default!;
+        public DateTime LogoutDate { get; set; } = DateTime.UtcNow;
+        public string LoginStatus { get; set; } = "Active";
+        public string OS { get; set; } = default!;
+        public string Browser { get; set; } = default!;
         public string? Token { get; set; } = default!;
         public bool IsDeleting { get; set; } = default!;
         [JsonIgnore]

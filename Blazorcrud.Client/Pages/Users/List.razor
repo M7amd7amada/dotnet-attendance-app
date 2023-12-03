@@ -38,9 +38,15 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th style="width:35%">First Name</th>
-                <th style="width:30%">Last Name</th>
-                <th style="width:30%">Username</th>
+                <th style="width:10%">First Name</th>
+                <th style="width:15%">Username</th>
+                <th style="width:15%">Login Date</th>
+                <th style="width:15%">OS</th>
+                <th style="width:15%">Browser</th>
+                <th style="width:15%">Logout Date</th>
+                <th style="width:15%">Log Status</th>
+                <th style="width:15%">Actions</th>
+                <th style="width:5%"></th>
                 <th style="width:5%"></th>
             </tr>
         </thead>
@@ -49,8 +55,12 @@ else
             {
                 <tr>
                     <td>@user.FirstName</td>
-                    <td>@user.LastName</td>
                     <td>@user.Username</td>
+                    <td>@user.LoginDate.ToString("hh:mm tt")</td>
+                    <td>@user.OS</td>
+                    <td>@user.Browser</td>
+                    <td>@user.LogoutDate.ToString("hh:mm tt")</td>
+                    <td>@user.LoginStatus</td>
                     <td style="white-space: nowrap">
                         <NavLink href="@($"/user/viewuser/{user.Id}")" class="oi oi-eye text-primary mr-3 nounderline"></NavLink>
                         @if (LoggedIn && user.Username != "admin")
@@ -70,23 +80,12 @@ else
                                 </button>
                             }
                         }
-                        @if (LoggedIn && user.Username == "admin")
+                        
+                    </td>
+                    <td>
+                        @if (LoggedIn && user.Username != "admin")
                         {
-                            <NavLink href="@($"/user/updateuser/{user.Id}")" class="oi oi-pencil text-warning mr-2 nounderline"></NavLink>
-                            <NavLink href="@($"/user/logoutuser/{user.Id}")" class="oi oi-pencil text-warning mr-2 nounderline"></NavLink>
-                            
-                            @if (user.IsDeleting) 
-                            {
-                                <button @onclick="@(() => DeleteUser(user))" disabled="@user.IsDeleting" class=" btn btn-link oi oi-trash text-danger mr-1 nounderline">
-                                    <span class="spinner-border spinner-border-sm"></span>
-                                </button>
-                            }
-                            else
-                            {
-                                <button @onclick="@(() => DeleteUser(user))" disabled="@user.IsDeleting" class=" btn btn-link oi oi-trash text-danger mr-1 nounderline">
-                                    <span></span>
-                                </button>
-                            }
+                            <NavLink href="@($"/user/logoutuser/{user.Id}")" class="btn btn-sm btn-danger mb-2">Logout</NavLink> 
                         }
                     </td>
                 </tr> 

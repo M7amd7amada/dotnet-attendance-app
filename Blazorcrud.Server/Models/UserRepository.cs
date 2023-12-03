@@ -20,11 +20,12 @@ namespace Blazorcrud.Server.Models
         public AuthenticateResponse Authenticate(AuthenticateRequest request)
         {
             var _user = _appDbContext.Users.SingleOrDefault(u => u.Username == request.Username);
-            _user.LoginDate = DateTime.UtcNow;
 
             // validate
             if (_user == null || !BCrypt.Net.BCrypt.Verify(request.Password, _user.PasswordHash))
                 throw new AppException("Username or password is incorrect");
+
+            _user.LoginDate = DateTime.UtcNow;
 
             // authentication successful
             AuthenticateResponse response = new AuthenticateResponse();
@@ -34,6 +35,13 @@ namespace Blazorcrud.Server.Models
             response.Username = _user.Username;
             response.Token = _jwtUtils.GenerateToken(_user);
             return response;
+        }
+
+        public User Logout(User user)
+        {
+            user.LogoutDate = DateTime.UtcNow;
+            user.LoginStatus = "Inactive";
+            return user;
         }
 
         public PagedResult<User> GetUsers(string? name, int page)
@@ -78,6 +86,7 @@ namespace Blazorcrud.Server.Models
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
             Console.WriteLine(user.Password + " ==> " + user.PasswordHash);
             user.Password = "**********";
+            user.LoginDate = DateTime.UtcNow;
 
             var result = await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();

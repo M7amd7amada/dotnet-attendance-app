@@ -14,7 +14,20 @@
 @code {
     bool loading = false;
     
-    User user = new User();
+    User user = new User()
+    {
+        FirstName = "",
+        LastName = "",
+        Username = "",
+        Password = "",
+        LoginDate = DateTime.UtcNow,
+        LogoutDate = DateTime.UtcNow,
+        LoginStatus = "Inactive",
+        OS = "",
+        Browser = "",
+        Token = "",
+        IsDeleting = true
+    };
 
     async Task CreateUser()
     {

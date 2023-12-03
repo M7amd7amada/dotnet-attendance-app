@@ -12,5 +12,6 @@ namespace Blazorcrud.Server.Models
         Task<User> AddUser(User user);
         Task<User?> UpdateUser(User user);
         Task<User?> DeleteUser(int id);
+        public User Logout(User user);
     }
 }

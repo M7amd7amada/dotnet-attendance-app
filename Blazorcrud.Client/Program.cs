@@ -16,7 +16,7 @@ builder.Services.AddScoped<IHttpService, HttpService>();
 builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 builder.Services.AddScoped(x =>
 {
-    var apiUrl = new Uri("http://localhost:5001");
+    var apiUrl = new Uri("https://localhost:5001");
     return new HttpClient() { BaseAddress = apiUrl };
 });
 builder.Services.AddSingleton<PageHistoryState>();

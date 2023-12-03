@@ -30,6 +30,17 @@ namespace Blazorcrud.Server.Controllers
             return Ok(_userRepository.Authenticate(request));
         }
 
+        /// <summary>
+        /// Log out the user.
+        /// </summary>
+        [AllowAnonymous]
+        [HttpPost("logout")]
+        public async Task<ActionResult> LogOut(int id)
+        {
+            var user = await _userRepository.GetUser(id);
+            return Ok(_userRepository.Logout(user!));
+        }
+
 
         /// <summary>
         /// Returns a list of paginated users with a default page size of 5.
