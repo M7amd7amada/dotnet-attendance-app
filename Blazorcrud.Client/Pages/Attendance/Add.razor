@@ -1,0 +1,40 @@
+@page "/attendance/createattendance"
+@attribute [Authorize]
+@inject IAlertService AlertService
+@inject IAttendanceService AttendanceService
+@inject NavigationManager navManager
+@inject Blazorcrud.Client.Shared.PageHistoryState PageHistoryState
+
+<h1>Create Attendance</h1>
+<br />
+
+
+<Form ButtonText="Create Attendance" attendance="@attendance" loading="@loading"
+            OnValidSubmit="@CreateAttendance" />
+
+@code {
+    bool loading = false;
+    
+    Attendance attendance = new();
+    async Task CreateAttendance()
+    {
+        loading = true;
+        try
+        {
+            await AttendanceService.AddAttendance(attendance);
+            AlertService.Success("Attendance added successfully", keepAfterRouteChange: true);
+            if (PageHistoryState.CanGoBack()){
+                navManager.NavigateTo(PageHistoryState.GetGoBackPage());
+            }
+            else{
+                navManager.NavigateTo("/attendance/1");
+            } 
+        }
+        catch (Exception ex)
+        {
+            AlertService.Error(ex.Message);
+            loading = false;
+            StateHasChanged();
+        }
+    }
+}

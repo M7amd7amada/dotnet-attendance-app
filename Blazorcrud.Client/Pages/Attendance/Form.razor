@@ -1,0 +1,60 @@
+@inject Blazorcrud.Client.Shared.PageHistoryState PageHistoryState
+
+<EditForm Model="@attendance" OnValidSubmit="@OnValidSubmit">
+    <div class="form-group">
+        <label>Day of Week:</label>
+        <div>
+            <InputSelect @bind-Value="@attendance.DayOfWeek" class="form-control col-sm-3" >
+                    <option value="Select">--Select--</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+            </InputSelect>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Attendance Time:</label>
+        <div>
+            <input type="time" @bind-value="@attendance.AttendanceTime"/>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Departure Time:</label>
+            <div>
+                <input type="time" @bind-value="@attendance.DepartureTime"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button disabled="@loading" class="btn btn-primary">
+            @if (loading) 
+            {
+                <span class="spinner-border spinner-border-sm mr-1"></span>
+            }
+            @ButtonText
+        </button>
+        @if (PageHistoryState.CanGoBack()){
+            <NavLink href="@PageHistoryState.GetGoBackPage()" class="btn btn-link">Cancel</NavLink>
+        }
+        else{
+            <NavLink href="/attendance/1" class="btn btn-link">Back</NavLink>
+        }
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Attendance attendance { get; set; }
+    [Parameter]
+    public string ButtonText { get; set; } = "Save";
+    [Parameter]
+    public bool loading { get; set; } = false;
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+}

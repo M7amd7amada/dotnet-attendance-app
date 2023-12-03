@@ -1,0 +1,134 @@
+@page "/attendance/{Page}"
+@inject Services.IAttendanceService AttendanceService
+@inject Services.IUserService UserService
+@inject Microsoft.AspNetCore.Components.NavigationManager UriHelper
+@inject Blazorcrud.Client.Shared.PageHistoryState PageHistoryState
+
+<h1>Attendance</h1>
+<br />
+
+<div class="row mb-3">
+    <div class="col-md-7">
+        @if (LoggedIn)
+        {
+            <NavLink href="/attendance/createattendance" class="btn btn-sm btn-success mb-2">Add Attendance</NavLink>
+        }
+    </div>
+    <div class="input-group col-md-5 text-md-right">
+        <input name="PersonSearchInput" type="text" class="form-control" placeholder="Person Name" @bind="this.SearchTerm" @onkeyup="SearchBoxKeyPress" />
+        <div class="input-group-btn">
+            <button name="PersonSearchButton" class="btn btn-default" @onclick="SearchClick">
+                <i class="oi oi-magnifying-glass" title="search" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="input-group-btn">
+            <button name="PersonSearchClear" class="btn btn-default" @onclick="ClearSearch">
+                <i class="oi oi-x" title="clear" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+@if (attendances == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width:25%">Day of Week</th>
+                <th style="width:25%">Attendance Time</th>
+                <th style="width:25%">Departure Time</th>
+                @* <th style="width:25%">User</th> *@
+                <th style="width:5%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attendance in attendances.Results)
+            {
+                <tr>
+                    <td>@attendance.DayOfWeek.ToString("dddd")</td>
+                    <td>@attendance.AttendanceTime.ToString("HH:MM")</td>
+                    <td>@attendance.DepartureTime.ToString("HH:MM")</td>
+                    <td style="white-space: nowrap">
+                        <NavLink href="@($"/attendance/viewattendance/{attendance.Id}")" class="oi oi-eye text-primary mr-3 nounderline"></NavLink>
+                        @if (LoggedIn)
+                        {
+                            <NavLink href="@($"/attendance/updateattendance/{attendance.Id}")" class="oi oi-pencil text-warning mr-2 nounderline"></NavLink>
+                            
+                            <button @onclick="@(() => DeleteAttendance(attendance))" class=" btn btn-link oi oi-trash text-danger mr-1 nounderline">
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <Pager Result=@attendances PageChanged=PagerPageChanged />
+}
+
+@code {
+    [Parameter]
+    public string Page { get; set; } = "1";
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+    protected PagedResult<Attendance> attendances;
+
+    public bool LoggedIn
+    {
+        get { return UserService.User != null; }
+    }
+    protected override void OnInitialized()
+    {
+        PageHistoryState.AddPageToHistory(UriHelper.Uri);
+        base.OnInitialized();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        attendances = await AttendanceService.GetAttendances(null, Page);
+        PageHistoryState.AddPageToHistory(UriHelper.Uri);
+    }
+
+    protected void PagerPageChanged(int page)
+    {
+        UriHelper.NavigateTo("/attendance/" + page);
+        PageHistoryState.AddPageToHistory(UriHelper.Uri);
+    }
+
+    private async void DeleteAttendance(Attendance _attendance)
+    {
+        var attendance = _attendance;
+        // Add your delete logic here
+        attendances = await AttendanceService.GetAttendances(null, Page);
+        StateHasChanged();
+    }
+    protected async Task SearchBoxKeyPress(KeyboardEventArgs ev)
+    {
+        if (ev.Key == "Enter")
+        {
+            await SearchClick();
+        }
+    }
+
+    protected async Task SearchClick()
+    {
+        if (string.IsNullOrEmpty(SearchTerm))
+        {
+            attendances = await AttendanceService.GetAttendances(null, Page);
+            return;
+        }
+        attendances = await AttendanceService.GetAttendances(SearchTerm, Page);
+        StateHasChanged();
+    }
+
+    protected async Task ClearSearch()
+    {
+        SearchTerm = string.Empty;
+        attendances = await AttendanceService.GetAttendances(SearchTerm, Page);
+        PageHistoryState.AddPageToHistory(UriHelper.Uri);
+        StateHasChanged();
+    }
+}

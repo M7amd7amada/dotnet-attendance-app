@@ -1,0 +1,48 @@
+@page "/attendance/viewattendance/{id}"
+@inject IAttendanceService AttendanceService
+@inject NavigationManager navManager
+@inject Blazorcrud.Client.Shared.PageHistoryState PageHistoryState
+
+<h1>View Attendance</h1>
+<br/>
+
+<table class="table col-md-6">
+    <tbody>
+        <tr>
+            <th scope="row">Id</th>
+            <td>@attendance.Id</td>
+        </tr>
+        <tr>
+            <th scope="row">Attendance Time</th>
+            <td>@attendance.AttendanceTime.ToString("HH:MM tt")</td>
+        </tr>
+        <tr>
+            <th scope="row">Departure Time</th>
+            <td>@attendance.DepartureTime.ToString("HH:MM tt")</td>
+        </tr>
+        <tr>
+            <th scope="row">Day</th>
+            <td>@attendance.DayOfWeek.ToString("dddd")</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="form-group">
+    @if (PageHistoryState.CanGoBack()){
+        <NavLink href="@PageHistoryState.GetGoBackPage()" class="btn btn-link">Back</NavLink>
+    }
+    else{
+        <NavLink href="/person/1" class="btn btn-link">Back</NavLink>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Attendance attendance = new();
+    protected async override Task OnParametersSetAsync()
+    {
+        attendance = await AttendanceService.GetAttendance(int.Parse(Id));
+    }
+}

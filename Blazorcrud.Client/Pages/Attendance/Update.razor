@@ -1,0 +1,52 @@
+@page "/attendance/updateattendance/{id}"
+@attribute [Authorize]
+@inject IAlertService AlertService
+@inject IAttendanceService AttendanceService
+@inject NavigationManager navManager
+@inject Blazorcrud.Client.Shared.PageHistoryState PageHistoryState
+
+<h1>Edit Attendance</h1>
+<br/>
+
+<Form ButtonText="Update Attendance" attendance="@attendance" loading="@loading"
+            OnValidSubmit="@UpdateAttendance" />
+
+@code {
+    bool loading = false;
+    
+    [Parameter]
+    public string Id { get; set; }
+
+    Attendance attendance = new()
+    {
+        AttendanceTime = new DateTime(),
+        DepartureTime = new DateTime(),
+        DayOfWeek = new DateTime(),
+    };
+    protected async override Task OnParametersSetAsync()
+    {
+        attendance = await AttendanceService.GetAttendance(int.Parse(Id));
+    }
+
+    async Task UpdateAttendance()
+    {
+        loading = true;
+        try
+        {
+            await AttendanceService.UpdateAttendance(attendance);
+            AlertService.Success("Attendance updated successfully", keepAfterRouteChange: true);
+            if (PageHistoryState.CanGoBack()){
+                navManager.NavigateTo(PageHistoryState.GetGoBackPage());
+            }
+            else{
+                navManager.NavigateTo("/attendance/1");
+            } 
+        }
+        catch (Exception ex)
+        {
+            AlertService.Error(ex.Message);
+            loading = false;
+            StateHasChanged();
+        }
+    }
+}
