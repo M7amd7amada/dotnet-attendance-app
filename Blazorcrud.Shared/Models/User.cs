@@ -9,8 +9,8 @@ namespace Blazorcrud.Shared.Models
         public string LastName { get; set; } = default!;
         public string Username { get; set; } = default!;
         public string Password { get; set; } = default!;
-        public DateTime LoginDate { get; set; } = DateTime.UtcNow;
-        public DateTime LogoutDate { get; set; } = DateTime.UtcNow;
+        public DateTime LoginDate { get; set; } = DateTime.Now;
+        public DateTime LogoutDate { get; set; } = DateTime.Now;
         public string LoginStatus { get; set; } = "Active";
         public string OS { get; set; } = default!;
         public string Browser { get; set; } = default!;

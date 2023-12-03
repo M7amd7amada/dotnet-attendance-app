@@ -23,13 +23,13 @@ public class DataGenerator
 
             //Create test addresses
             var testSchedules = new Faker<Schedule>()
-                .RuleFor(a => a.StartTime, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.EndTime, f => f.Date.Between(DateTime.UtcNow, DateTime.UtcNow.AddHours(20)));
+                .RuleFor(a => a.StartTime, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.EndTime, f => f.Date.Between(DateTime.Now, DateTime.Now.AddHours(20)));
 
             var testAttendances = new Faker<Attendance>()
-                .RuleFor(a => a.DayOfWeek, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.DepartureTime, f => f.Date.Between(DateTime.UtcNow, DateTime.UtcNow.AddHours(20)));
+                .RuleFor(a => a.DayOfWeek, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.DepartureTime, f => f.Date.Between(DateTime.Now, DateTime.Now.AddHours(20)));
 
             // Create new people
             var testPeople = new Faker<Blazorcrud.Shared.Models.Person>()
@@ -81,9 +81,9 @@ public class DataGenerator
         if (!(appDbContext.Attendances.Any()))
         {
             var testAttendances = new Faker<Attendance>()
-                .RuleFor(a => a.DayOfWeek, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.DepartureTime, f => f.Date.Between(DateTime.UtcNow, DateTime.UtcNow.AddHours(20)));
+                .RuleFor(a => a.DayOfWeek, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.DepartureTime, f => f.Date.Between(DateTime.Now, DateTime.Now.AddHours(20)));
 
             var attendances = testAttendances.Generate(20);
 
@@ -122,12 +122,12 @@ public class DataGenerator
                 "Inactive"
             };
 
-            // RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
+            // RuleFor(a => a.AttendanceTime, f => f.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
             var testUsers = new Faker<User>()
                 .RuleFor(u => u.FirstName, u => u.Name.FirstName())
                 .RuleFor(u => u.LastName, u => u.Name.LastName())
-                .RuleFor(u => u.LoginDate, u => u.Date.Between(DateTime.UtcNow.AddDays(-30), DateTime.UtcNow))
-                .RuleFor(a => a.LogoutDate, f => f.Date.Between(DateTime.UtcNow, DateTime.UtcNow.AddHours(20)))
+                .RuleFor(u => u.LoginDate, u => u.Date.Between(DateTime.Now.AddDays(-30), DateTime.Now))
+                .RuleFor(a => a.LogoutDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddHours(20)))
                 .RuleFor(u => u.Username, u => u.Internet.UserName())
                 .RuleFor(u => u.Password, u => u.Internet.Password());
             var users = testUsers.Generate(4);

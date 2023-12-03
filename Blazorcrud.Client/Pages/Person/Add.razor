@@ -23,13 +23,13 @@
         BaseSalary = 0,
         PayrollPeriod = PayrollPeriod.Monthly,
         Schedule = new() {
-            StartTime = DateTime.UtcNow,
-            EndTime = DateTime.UtcNow.AddHours(8)
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now.AddHours(8)
         },
         Attendances = new() {
             new Attendance {
-                AttendanceTime = DateTime.UtcNow,
-                DepartureTime = DateTime.UtcNow.AddHours(8),
+                AttendanceTime = DateTime.Now,
+                DepartureTime = DateTime.Now.AddHours(8),
                 DayOfWeek = DateTime.Today
             }
         },

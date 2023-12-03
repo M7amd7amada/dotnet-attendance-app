@@ -25,7 +25,7 @@ namespace Blazorcrud.Server.Models
             if (_user == null || !BCrypt.Net.BCrypt.Verify(request.Password, _user.PasswordHash))
                 throw new AppException("Username or password is incorrect");
 
-            _user.LoginDate = DateTime.UtcNow;
+            _user.LoginDate = DateTime.Now;
 
             // authentication successful
             AuthenticateResponse response = new AuthenticateResponse();
@@ -39,7 +39,7 @@ namespace Blazorcrud.Server.Models
 
         public User Logout(User user)
         {
-            user.LogoutDate = DateTime.UtcNow;
+            user.LogoutDate = DateTime.Now;
             user.LoginStatus = "Inactive";
             return user;
         }
@@ -86,7 +86,7 @@ namespace Blazorcrud.Server.Models
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
             Console.WriteLine(user.Password + " ==> " + user.PasswordHash);
             user.Password = "**********";
-            user.LoginDate = DateTime.UtcNow;
+            user.LoginDate = DateTime.Now;
 
             var result = await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
