@@ -8,11 +8,12 @@ using System.Reflection;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=./BlazorServerCRUD.sqlite"));
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(connectionString));
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IUploadRepository, UploadRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

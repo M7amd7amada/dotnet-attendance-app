@@ -26,6 +26,13 @@ namespace Blazorcrud.Client.Services
             User = await _localStorageService.GetItem<User>(_userKey);
         }
 
+        public async Task SetToInactive(int id)
+        {
+            var user = await GetUser(id);
+            user.LoginStatus = "Inactive";
+            await _localStorageService.SetItem(_userKey, user);
+        }
+
         public async Task Login(Login model)
         {
             User = await _httpService.Post<User>("/api/user/authenticate", model);
@@ -34,6 +41,10 @@ namespace Blazorcrud.Client.Services
 
         public async Task Logout()
         {
+            if (User != null)
+            {
+                await UpdateLogoutTime(User.Id);
+            }
             User = null!;
             await _localStorageService.RemoveItem(_userKey);
             _navigationManager.NavigateTo("/user/login");
@@ -61,6 +72,18 @@ namespace Blazorcrud.Client.Services
         {
             await _httpService.Post($"api/user", user);
         }
+
+        public async Task UpdateLogoutTime(int userId)
+        {
+            var user = await GetUser(userId);
+            if (user != null)
+            {
+                user.LogoutDate = DateTime.Now;
+                user.LoginStatus = "Inactive";
+                await _localStorageService.SetItem(_userKey, user);
+            }
+        }
+
 
         public async Task UpdateUser(User user)
         {

@@ -9,6 +9,8 @@ namespace Blazorcrud.Server.Models
         AuthenticateResponse Authenticate(AuthenticateRequest request);
         PagedResult<User> GetUsers(string? name, int page);
         Task<User?> GetUser(int Id);
+        string GetOperatingSystem(string userAgent);
+        string GetBrowser(string userAgent);
         Task<User> AddUser(User user);
         Task<User?> UpdateUser(User user);
         Task<User?> DeleteUser(int id);

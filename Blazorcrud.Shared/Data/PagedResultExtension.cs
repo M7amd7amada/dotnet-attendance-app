@@ -13,6 +13,8 @@ namespace Blazorcrud.Shared.Data
             result.PageCount = (int)Math.Ceiling(pageCount);
 
             var skip = (page - 1) * pageSize;
+            skip = Math.Max(0, skip); // Ensure skip is not negative
+
             result.Results = query.Skip(skip).Take(pageSize).ToList();
 
             return result;

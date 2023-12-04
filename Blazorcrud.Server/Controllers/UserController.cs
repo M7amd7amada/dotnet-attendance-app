@@ -1,4 +1,5 @@
 using Blazorcrud.Server.Authorization;
+using Microsoft.Net.Http.Headers;
 using Blazorcrud.Server.Models;
 using Blazorcrud.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -68,6 +69,9 @@ namespace Blazorcrud.Server.Controllers
         [HttpPost]
         public async Task<ActionResult> AddUser(User user)
         {
+            string userAgent = Request.Headers[HeaderNames.UserAgent]!;
+            user.OS = _userRepository.GetOperatingSystem(userAgent);
+            user.Browser = _userRepository.GetBrowser(userAgent);
             return Ok(await _userRepository.AddUser(user));
         }
 

@@ -65,15 +65,9 @@ namespace Blazorcrud.Server.Models
 
         public async Task<User?> GetUser(int Id)
         {
+            if (Id <= 0) Id = 1;
             var result = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
-            if (result != null)
-            {
-                return result;
-            }
-            else
-            {
-                throw new KeyNotFoundException("User not found");
-            }
+            return result;
         }
 
         public async Task<User> AddUser(User user)
@@ -120,7 +114,7 @@ namespace Blazorcrud.Server.Models
             }
             else
             {
-                throw new KeyNotFoundException("User not found");
+                throw new KeyNotFoundException("User not found " + nameof(UpdateUser));
             }
             return result;
         }
@@ -140,9 +134,58 @@ namespace Blazorcrud.Server.Models
             }
             else
             {
-                throw new KeyNotFoundException("User not found");
+                throw new KeyNotFoundException("User not found " + nameof(DeleteUser));
             }
             return result;
+        }
+
+        public string GetOperatingSystem(string userAgent)
+        {
+
+            if (userAgent.Contains("Windows"))
+            {
+                return "Windows 11";
+            }
+            else if (userAgent.Contains("Mac"))
+            {
+                return "Mac OS";
+            }
+            else if (userAgent.Contains("Linux"))
+            {
+                return "Linux";
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+
+        public string GetBrowser(string userAgent)
+        {
+            if (userAgent.Contains("MSIE") || userAgent.Contains("Trident"))
+            {
+                return "Internet Explorer";
+            }
+            else if (userAgent.Contains("Edge"))
+            {
+                return "Microsoft Edge";
+            }
+            else if (userAgent.Contains("Chrome"))
+            {
+                return "Google Chrome";
+            }
+            else if (userAgent.Contains("Firefox"))
+            {
+                return "Mozilla Firefox";
+            }
+            else if (userAgent.Contains("Safari"))
+            {
+                return "Safari";
+            }
+            else
+            {
+                return "Unknown";
+            }
         }
     }
 }

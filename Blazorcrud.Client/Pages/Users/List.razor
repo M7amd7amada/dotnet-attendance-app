@@ -70,7 +70,7 @@ else
                             @if (user.IsDeleting) 
                             {
                                 <button @onclick="@(() => DeleteUser(user))" disabled="@user.IsDeleting" class=" btn btn-link oi oi-trash text-danger mr-1 nounderline">
-                                    <span class="spinner-border spinner-border-sm"></span>
+                                    @* <span class="spinner-border spinner-border-sm"></span> *@
                                 </button>
                             }
                             else
@@ -83,9 +83,12 @@ else
                         
                     </td>
                     <td>
-                        @if (LoggedIn && user.Username != "admin")
+                        @if (LoggedInAsAdmin && user.Username != "admin")
                         {
-                            <NavLink href="@($"/user/logoutuser/{user.Id}")" class="btn btn-sm btn-danger mb-2">Logout</NavLink> 
+                            @if (user.LoginStatus.ToLower() == "active")
+                            {
+                                <Button @onclick="() => LogoutClick(user)" class="btn btn-sm btn-danger mb-2">Logout</Button>
+                            }
                         }
                     </td>
                 </tr> 
@@ -105,6 +108,20 @@ else
     public bool LoggedIn
     {
         get {return UserService.User != null;}
+    }
+
+    public bool LoggedInAsAdmin
+    {
+        get { return LoggedIn && UserService.User != null && UserService.User.Username == "admin"; }
+    }
+
+    public async Task LogoutClick(User user)
+    {
+        await UserService.SetToInactive(user.Id);
+        user.LoginStatus = "Inactive";
+        await UserService.UpdateLogoutTime(user.Id);
+        user.LogoutDate = DateTime.Now;;
+        StateHasChanged();
     }
     
     protected override void OnInitialized()
