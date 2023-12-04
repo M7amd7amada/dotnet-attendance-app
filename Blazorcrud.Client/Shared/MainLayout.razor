@@ -14,7 +14,10 @@
     <div class="navbar-nav ml-auto">
         @if (LoggedIn)
         {
-            <NavLink href="/user/logout" class="nav-item nav-link">Logout</NavLink>
+            <span class="nav-item" style="
+                transform: translate(-3px, 8px) !important;
+                color: white !important;">@UserService.User.Username</span>
+            <NavLink href="/user/logout" class="nav-item nav-link" @onclick="Logout">Logout</NavLink>
         }
         else
         {
@@ -41,5 +44,17 @@
     public bool LoggedIn
     {
         get {return UserService.User != null;}
+    }
+
+    private async Task Logout()
+    {
+        if (LoggedIn)
+        {
+            await UserService.SetToInactive(UserService.User.Id);
+            UserService.User.LoginStatus = "Inactive";
+            await UserService.UpdateLogoutTime(UserService.User.Id);
+            UserService.User.LogoutDate = DateTime.Now.AddDays(2);
+            StateHasChanged();
+        }
     }
 }

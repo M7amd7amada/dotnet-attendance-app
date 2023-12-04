@@ -53,13 +53,21 @@ else
         <tbody>
             @foreach (var user in users.Results)
             {
+                var logoutDate = user.LogoutDate;
                 <tr>
                     <td>@user.FirstName</td>
                     <td>@user.Username</td>
-                    <td>@user.LoginDate.ToString("hh:mm tt")</td>
+                    <td>@user.LoginDate.ToString("yyyy-MM-dd")</td>
                     <td>@user.OS</td>
                     <td>@user.Browser</td>
-                    <td>@user.LogoutDate.ToString("hh:mm tt")</td>
+                    @if (logoutDate == default(DateTime))
+                    {
+                        <td>None</td>
+                    }
+                    else
+                    {
+                        <td>@user.LogoutDate.ToString("yyyy-MM-dd")</td>
+                    }
                     <td>@user.LoginStatus</td>
                     <td style="white-space: nowrap">
                         <NavLink href="@($"/user/viewuser/{user.Id}")" class="oi oi-eye text-primary mr-3 nounderline"></NavLink>
@@ -120,7 +128,7 @@ else
         await UserService.SetToInactive(user.Id);
         user.LoginStatus = "Inactive";
         await UserService.UpdateLogoutTime(user.Id);
-        user.LogoutDate = DateTime.Now;;
+        user.LogoutDate = DateTime.Now.AddDays(2);
         StateHasChanged();
     }
     

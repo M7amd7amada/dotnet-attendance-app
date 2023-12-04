@@ -4,6 +4,8 @@
 @code {
     protected override async void OnInitialized()
     {
+        UserService.User.LogoutDate = DateTime.Now;
+        StateHasChanged();
         await UserService.Logout();
     }
 }

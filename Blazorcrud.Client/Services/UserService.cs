@@ -36,6 +36,7 @@ namespace Blazorcrud.Client.Services
         public async Task Login(Login model)
         {
             User = await _httpService.Post<User>("/api/user/authenticate", model);
+            User.LoginStatus = "Active";
             await _localStorageService.SetItem(_userKey, User);
         }
 
@@ -43,6 +44,8 @@ namespace Blazorcrud.Client.Services
         {
             if (User != null)
             {
+                await SetToInactive(User.Id);
+                User.LogoutDate = DateTime.Now.AddDays(2);
                 await UpdateLogoutTime(User.Id);
             }
             User = null!;
@@ -83,7 +86,6 @@ namespace Blazorcrud.Client.Services
                 await _localStorageService.SetItem(_userKey, user);
             }
         }
-
 
         public async Task UpdateUser(User user)
         {

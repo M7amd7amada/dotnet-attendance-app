@@ -21,12 +21,12 @@
         Username = "",
         Password = "",
         LoginDate = DateTime.Now,
-        LogoutDate = DateTime.Now,
+        LogoutDate = DateTime.Now.AddDays(2),
         LoginStatus = "Inactive",
         OS = "",
         Browser = "",
         Token = "",
-        IsDeleting = true
+        IsDeleting = false
     };
 
     async Task CreateUser()
