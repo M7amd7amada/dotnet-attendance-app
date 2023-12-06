@@ -38,6 +38,7 @@ namespace Blazorcrud.Server.Models
         public async Task<Person?> GetPerson(int personId)
         {
             var result = await _appDbContext.People
+                .AsNoTracking()
                 .Include(p => p.Addresses)
                 .Include(p => p.Schedule)
                 .Include(p => p.Attendances)
