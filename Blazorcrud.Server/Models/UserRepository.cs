@@ -51,6 +51,7 @@ namespace Blazorcrud.Server.Models
             if (name != null)
             {
                 return _appDbContext.Users
+                    .AsNoTracking()
                     .Where(u => u.FirstName == name || u.LastName == name || u.Username == name)
                     .OrderBy(u => u.Username)
                     .GetPaged(page, pageSize);
@@ -66,7 +67,9 @@ namespace Blazorcrud.Server.Models
         public async Task<User?> GetUser(int Id)
         {
             if (Id <= 0) Id = 1;
-            var result = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
+            var result = await _appDbContext.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == Id);
             return result;
         }
 
