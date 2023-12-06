@@ -37,7 +37,7 @@ namespace Blazorcrud.Server.Models
 
         public async Task<Upload?> GetUpload(int Id)
         {
-            var result = await _appDbContext.Uploads.FirstOrDefaultAsync(u => u.Id == Id);
+            var result = await _appDbContext.Uploads.AsNoTracking().FirstOrDefaultAsync(u => u.Id == Id);
             if (result != null)
             {
                 return result;
