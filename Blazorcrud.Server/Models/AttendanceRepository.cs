@@ -37,7 +37,7 @@ public class AttendanceRepository : IAttendanceRepository
 
     public async Task<Attendance?> GetAttendance(int attendanceId)
     {
-        var result = await _appDbContext.Attendances.FirstOrDefaultAsync(a => a.Id == attendanceId);
+        var result = await _appDbContext.Attendances.AsNoTracking().FirstOrDefaultAsync(a => a.Id == attendanceId);
         if (result is not null)
         {
             return result;
